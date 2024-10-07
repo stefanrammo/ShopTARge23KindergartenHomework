@@ -52,21 +52,26 @@ namespace ShopTARge23.ApplicationServices.Services
 
         public async Task<Kindergarten> Update(KindergartenDto dto)
         {
-            Kindergarten domain = new();
+            var existingKindergarten = await _context.Kindergartens
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
 
-            domain.Id = dto.Id;
-            domain.GroupName = dto.GroupName;
-            domain.ChildrenCount = dto.ChildrenCount;
-            domain.KindergartenName = dto.KindergartenName;
-            domain.Teacher = dto.Teacher;
-            domain.CreatedAt = dto.CreatedAt;
-            domain.UpdatedAt = DateTime.Now;
+            if (existingKindergarten == null)
+            {
+                throw new Exception("Kindergarten not found");
+            }
 
-            _context.Kindergartens.Update(domain);
+            existingKindergarten.GroupName = dto.GroupName;
+            existingKindergarten.ChildrenCount = dto.ChildrenCount;
+            existingKindergarten.KindergartenName = dto.KindergartenName;
+            existingKindergarten.Teacher = dto.Teacher;
+            existingKindergarten.UpdatedAt = DateTime.Now; 
+
+            _context.Kindergartens.Update(existingKindergarten);
             await _context.SaveChangesAsync();
 
-            return domain;
+            return existingKindergarten;
         }
+
 
         public async Task<Kindergarten> Delete(Guid id)
         {
