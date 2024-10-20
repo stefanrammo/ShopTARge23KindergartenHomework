@@ -1,4 +1,6 @@
-﻿namespace ShopTARge23.Models.Kindergartens
+﻿using ShopTARge23.Models.Kindergartens;
+
+namespace ShopTARge23.Models.Kindergartens
 {
     public class KindergartenDetailsViewModel
     {
@@ -7,6 +9,9 @@
         public int ChildrenCount { get; set; }
         public string KindergartenName { get; set; }
         public string Teacher { get; set; }
+        public List<KindergartenImageViewModel> Image { get; set; }
+            = new List<KindergartenImageViewModel>();
+
 
 
         public DateTime CreatedAt { get; set; }

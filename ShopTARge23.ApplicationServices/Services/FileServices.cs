@@ -4,6 +4,7 @@ using ShopTARge23.Core.Domain;
 using ShopTARge23.Core.Dto;
 using ShopTARge23.Core.ServiceInterface;
 using ShopTARge23.Data;
+using System.Xml;
 
 
 namespace ShopTARge23.ApplicationServices.Services
@@ -23,56 +24,57 @@ namespace ShopTARge23.ApplicationServices.Services
             _context = context;
         }
 
-
-        public void FilesToApi(SpaceshipDto dto, Spaceship spaceship)
+        public void UploadFilesToDatabase(KindergartenDto dto, Kindergarten domain)
         {
-            if(!Directory.Exists(_webHost.ContentRootPath + "\\multipleFileUpload\\"))
+            if (dto.Files != null && dto.Files.Count > 0)
             {
-                Directory.CreateDirectory(_webHost.ContentRootPath + "\\multipleFileUpload\\");
-            }
-
-            foreach(var file in dto.Files)
-            {
-                string uploadsFolder = Path.Combine(_webHost.ContentRootPath, "multipleFileUpload");
-                string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                foreach (var image in dto.Files)
                 {
-                    file.CopyTo(fileStream);
-
-                    FileToApi path = new FileToApi
+                    using (var target = new MemoryStream())
                     {
-                        Id = Guid.NewGuid(),
-                        ExistingFilePath = uniqueFileName,
-                        SpaceshipId = spaceship.Id
-                    };
+                        FileToDatabase files = new FileToDatabase()
+                        {
+                            Id = Guid.NewGuid(),
+                            ImageTitle = image.FileName,
+                            KindergartenId = domain.Id
+                        };
 
-                    _context.FileToApis.AddAsync(path);
+                        image.CopyTo(target);
+                        files.ImageData = target.ToArray();
+
+                        _context.FileToDatabases.Add(files);
+                    }
                 }
             }
         }
 
-        public async Task<List<FileToApi>> RemoveImagesFromApi(FileToApiDto[] dtos)
+        public async Task<FileToDatabase> RemoveImageFromDatabase(FileToDatabaseDto dto)
         {
-            foreach(var dto in dtos)
+            var image = await _context.FileToDatabases
+                .Where(x => x.Id == dto.Id)
+                .FirstOrDefaultAsync();
+
+            _context.FileToDatabases.Remove(image);
+            await _context.SaveChangesAsync();
+
+            return image;
+        }
+
+
+        public async Task<FileToDatabase> RemoveImagesFromDatabase(FileToDatabaseDto[] dtos)
+        {
+            foreach (var dto in dtos)
             {
-                var imageId = await _context.FileToApis
-                    .FirstOrDefaultAsync(x => x.ExistingFilePath == dto.ExistingFilePath);
+                var image = await _context.FileToDatabases
+                    .Where(x => x.Id == dto.Id)
+                    .FirstOrDefaultAsync();
 
-                var filePath = _webHost.ContentRootPath + "\\multipleFileUpload\\"
-                    + imageId.ExistingFilePath;
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
-                _context.FileToApis.Remove(imageId);
+                _context.FileToDatabases.Remove(image);
                 await _context.SaveChangesAsync();
             }
 
             return null;
         }
+        //teha meetod, kus kustutatakse mitu pilti koos ankeediga ära
     }
 }

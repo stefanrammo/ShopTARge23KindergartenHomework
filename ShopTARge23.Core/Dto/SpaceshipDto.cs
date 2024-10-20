@@ -13,9 +13,7 @@ namespace ShopTARge23.Core.Dto
         public int Crew { get; set; }
         public int EnginePower { get; set; }
 
-        public List<IFormFile> Files { get; set; }
-        public IEnumerable<FileToApiDto> FileToApiDtos { get; set; }
-            = new List<FileToApiDto>();
+
 
 
         public DateTime CreatedAt { get; set; }

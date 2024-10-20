@@ -10,11 +10,19 @@ using ShopTARge23.Data;
 //Muutujateks on Id, GroupName, ChildrenCount, KindergartenName, Teacher, CreatedAt ja UpdatedAt.
 //NB! Piltide lisamist ei tee.
 //Töö on hindeline. Töö panna githubi ja link saata emailile.
- 
+
 //Õpetus, kuidas teha uut branchi:
 //https://www.youtube.com/watch?v=DYStzH7L6EQ
 //https://www.youtube.com/watch?v=8-EqOFXjV8Q
 //Tunnis vaatan töö üle.
+
+
+
+//Kindergarten CRUD-le lisada piltide lisamise,
+//ükshaaval kustutamine ja kogu ankeedi
+//kustutamisega peab ka pildid ära kustutama.
+//Pildid peab saama lisada andmebaasi.
+//Töö näitate tunnis ette.
 
 namespace ShopTARge23
 {
