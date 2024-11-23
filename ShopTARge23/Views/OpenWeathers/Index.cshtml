@@ -1,0 +1,35 @@
+﻿@model Tuple<ShopTARge23.Models.OpenWeathers.OpenWeatherIndexViewModel, ShopTARge23.Models.OpenWeathers.OpenWeatherSearchViewModel>
+
+<h1>City</h1>
+
+@if (Model.Item1 != null && !string.IsNullOrEmpty(Model.Item1.Name))
+{
+    <h2>Forecast for the selected city</h2>
+    <p><span>City:</span> <strong>@Model.Item1.Name</strong></p> 
+    <p><span>Temperature:</span> <strong>@Model.Item1.Temp &deg;C</strong></p> 
+    <p><span>Temp Feels like:</span> <strong>@Model.Item1.FeelsLike &deg;C</strong></p> 
+    <p><span>Humidity:</span> <strong>@Model.Item1.Humidity %</strong></p> 
+    <p><span>Pressure:</span> <strong>@Model.Item1.Pressure hPa</strong></p> 
+    <p><span>Wind Speed:</span> <strong>@Model.Item1.WindSpeed km/h</strong></p> 
+    @if (Model.Item1.WeatherConditions != null && Model.Item1.WeatherConditions.Any())
+    {
+        <p><span>Weather Condition:</span> <strong>@Model.Item1.WeatherConditions.FirstOrDefault()?.Main</strong></p> 
+    }
+    else
+    {
+        <p>No weather data available.</p>
+    }
+
+    <br />
+    <a href="@Url.Action("Index", "OpenWeathers")" class="btn btn-success">Return</a>
+}
+else
+{
+    <p>Please search for a city to get weather information.</p>
+}
+
+<form asp-action="SearchCity" method="post">
+    <label for="city">Search for a city:</label>
+    <input type="text" id="city" name="Name" value="@Model.Item2.Name" required />
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>

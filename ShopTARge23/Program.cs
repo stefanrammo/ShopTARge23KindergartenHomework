@@ -4,25 +4,21 @@ using ShopTARge23.ApplicationServices.Services;
 using ShopTARge23.Core.ServiceInterface;
 using ShopTARge23.Data;
 
-//Teha uus CRUD e lisamine, vataamine, uuendamine ja andmete kustutamine.
-//Teha uus branch.
-//Teemaks on Kindergarten.
-//Muutujateks on Id, GroupName, ChildrenCount, KindergartenName, Teacher, CreatedAt ja UpdatedAt.
-//NB! Piltide lisamist ei tee.
-//Töö on hindeline. Töö panna githubi ja link saata emailile.
+/*Teha api call OpenWeather api kohta.
+Saata githubi link ja tunnis näitate ette.
+Teha valmis uus api call. Samasugune nagu oli seda tunnis harjutatud AccuWeatheri oma, aga seekord teete OpenWeathermapi oma.
+ 
+Siin asub koduleht:
+https://api.openweathermap.org
+Siit saab koodi abil ilmaennustuse teada:
+https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
 
-//Õpetus, kuidas teha uut branchi:
-//https://www.youtube.com/watch?v=DYStzH7L6EQ
-//https://www.youtube.com/watch?v=8-EqOFXjV8Q
-//Tunnis vaatan töö üle.
-
-
-
-//Kindergarten CRUD-le lisada piltide lisamise,
-//ükshaaval kustutamine ja kogu ankeedi
-//kustutamisega peab ka pildid ära kustutama.
-//Pildid peab saama lisada andmebaasi.
-//Töö näitate tunnis ette.
+Nõuded:
+1.Valite Current Weather Data variandi.
+2. Tuleb teha Teie olemasolevale projektile uus branch nimega OpenWeather
+3. Ühendus teise API-ga tuleb luua Serviceclassis ja ühendada controlleriga ning controller omakorda vaatega.
+4. Tulemus peab olema selline nagu on seda õppematerjalide all kujutatud pildil nimega OpenWeathermap
+5. Kogu koodi ei või teha olemasoleva töötava Accuweatheri asemele.*/
 
 namespace ShopTARge23
 {
@@ -37,7 +33,14 @@ namespace ShopTARge23
 
             builder.Services.AddScoped<ISpaceshipsServices, SpaceshipsServices>();
             builder.Services.AddScoped<IFileServices, FileServices>();
-            builder.Services.AddScoped<IKindergartenServices, KindergartenServices>();
+            builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
+            builder.Services.AddScoped<IWeatherForecastServices, WeatherForecastServices>();
+            builder.Services.AddScoped<IChuckNorrisServices, ChuckNorrisServices>();
+            builder.Services.AddScoped<IFreeToGamesServices, FreeToGamesServices>();
+            builder.Services.AddScoped<IFreeToGamesServices, FreeToGamesServices>();
+            builder.Services.AddScoped<ICocktailServices, CocktailServices>();
+            builder.Services.AddScoped<IOpenWeatherServices, OpenWeatherServices>();
+
 
             builder.Services.AddDbContext<ShopTARge23Context>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -70,6 +73,13 @@ namespace ShopTARge23
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
 
             app.Run();
         }
